@@ -1,7 +1,7 @@
 FROM debian:buster
 
 RUN apt-get update && apt-get install -y \
-    nginx \ 
+    nginx \
     php7.3 \
     php7.3-fpm \
     php7.3-mbstring \
@@ -15,17 +15,16 @@ RUN apt-get update && apt-get install -y \
     mariadb-server \
     openssl
     # php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip \
-    # wordpress \
 
 # NGINX
 WORKDIR /etc/nginx/
 RUN rm sites-enabled/default
 COPY srcs/myserver.conf conf.d
 
-# SERVER PATH
-WORKDIR /var/www/
-RUN mkdir my_server
-COPY srcs/index.php my_server
+# # SERVER PATH
+# WORKDIR /var/www/
+# RUN mkdir my_server
+# COPY srcs/index.php my_server
 
 # MYSQL
 WORKDIR /tmp
@@ -47,11 +46,12 @@ RUN tar zxf wordpress.tar.gz --strip-components=1 && \
     rm wordpress.tar.gz
 COPY srcs/wp-config.php .
 
+#SSL
 RUN openssl req -x509 -out /etc/ssl/certs/myserver.crt -keyout /etc/ssl/private/myserver.key \
   -newkey rsa:2048 -nodes -sha256 \
-  -subj '/CN=localhost'
+  -subj '/CN=test-certificate'
 
-CMD service nginx start && service mysql restart --skip-grant-tables && service php7.3-fpm start && bash
+CMD service mysql restart --skip-grant-tables && service php7.3-fpm start && nginx -g "daemon off;"
 
 # NOTES :
 # apt-get upgrade; \ >> DO NOT USE THIS COMMAND
