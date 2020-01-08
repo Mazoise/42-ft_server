@@ -54,7 +54,7 @@ RUN openssl req -x509 -out /etc/ssl/certs/myserver.crt -keyout /etc/ssl/private/
   -newkey rsa:2048 -nodes -sha256 \
   -subj '/CN=test-certificate'
 
-CMD service mysql start --skip-grant-tables && service php7.3-fpm start && nginx -g "daemon off;"
+CMD service mysql start && service php7.3-fpm start && nginx -g "daemon off;"
 
 # NOTES :
 # apt-get upgrade; \ >> DO NOT USE THIS COMMAND
